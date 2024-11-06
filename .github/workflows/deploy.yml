@@ -1,0 +1,22 @@
+# .github/workflows/deploy.yml
+
+name: Ansible Syntax Check
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install Ansible
+        run: sudo apt-get install -y ansible
+
+      - name: Ansible Syntax Check
+        run: ansible-playbook --syntax-check playbooks/*.yml

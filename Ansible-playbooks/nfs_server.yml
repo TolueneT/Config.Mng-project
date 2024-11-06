@@ -1,0 +1,28 @@
+# playbooks/nfs_server.yml
+---
+- hosts: all
+  become: true
+  tasks:
+    - name: Install NFS server
+      apt:
+        name: nfs-kernel-server
+        state: present
+      notify: restart nfs
+
+    - name: Create NFS shared directory
+      file:
+        path: /mnt/shared_data
+        state: directory
+        mode: "0777"
+
+    - name: Export NFS shared directory
+      lineinfile:
+        path: /etc/exports
+        line: "/mnt/shared_data *(rw,sync,no_root_squash)"
+      notify: restart nfs
+
+  handlers:
+    - name: restart nfs
+      service:
+        name: nfs-kernel-server
+        state: restarted

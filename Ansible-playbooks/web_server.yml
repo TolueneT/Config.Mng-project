@@ -1,0 +1,33 @@
+# playbooks/web_server.yml
+---
+- hosts: all
+  become: true
+  tasks:
+    - name: Install Apache
+      apt:
+        name: apache2
+        state: present
+
+    - name: Start and enable Apache service
+      service:
+        name: apache2
+        state: started
+        enabled: true
+
+    - name: Install NFS client
+      apt:
+        name: nfs-common
+        state: present
+
+    - name: Create mount point for NFS
+      file:
+        path: /var/www/html/shared_data
+        state: directory
+
+    - name: Mount NFS share
+      mount:
+        src: "192.168.56.12:/mnt/shared_data"
+        path: /var/www/html/shared_data
+        fstype: nfs
+        opts: "rw"
+        state: mounted

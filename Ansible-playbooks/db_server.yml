@@ -1,0 +1,15 @@
+# playbooks/db_server.yml
+---
+- hosts: all
+  become: true
+  tasks:
+    - name: Install MySQL server
+      apt:
+        name: mysql-server
+        state: present
+
+    - name: Start and enable MySQL service
+      service:
+        name: mysql
+        state: started
+        enabled: true
